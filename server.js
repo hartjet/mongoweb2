@@ -156,7 +156,7 @@ app.get('/app/tags/', function(req, res){
 app.post('/app/tags/', jsonParser, function(req, res) {
 	console.log(req.body);
 	var jsonObj = req.body;
-	jsonObj.id = tagidGenerator;
+	//jsonObj.id = tagidGenerator;
 	Tags.create([jsonObj], function (err) {
 		if (err) {
 			console.log('object creation failed');
