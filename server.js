@@ -178,13 +178,21 @@ app.post('/app/addphotos/', jsonParser, function(req, res){
 
 app.put('/app/photos/tags/', jsonParser, function(req, res) {
 	console.log(req.body);
-	var jsonObj = req.body;
-	photos.put([jsonObj], function (err) {
-		if (err) {
-			console.log('failed to update document');
+	
+	photos.update({"_id": mongoose.Types.ObjectId(req.body.id)},{$addToSet:{tags: {$each: req.body.tags}}}, function(err){
+		if(err){
+			console.log('object update failed');
+			console.log(err);
 		}
 	});
+	
+	//db.photos.update({"_id": ObjectId("555e5722e62133366a9f8e31")},{$addToSet:{tags: {$each: ["washington", "france"]}}})
+	//var tag = req.params.tag;
+	//console.log('Query photos by tag');
+	//console.log(tag);
+	//retrievePhotosByTag(res, {tags: tag});
 });
+
 
 console.log("after defining all dynamic routes");
 

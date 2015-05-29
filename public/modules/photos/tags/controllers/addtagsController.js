@@ -69,26 +69,42 @@
 			console.log('updatetag');
 			var i;
 			var k;
+			var tagArr = [];
+			var picArr = [];
 			for(i = 0; i < $scope.tagLists.length; i++){
 				if(document.getElementById($scope.tagLists[i].name).checked){
-					for(k = 0; k < $scope.results.length; k++){
-						if(document.getElementById($scope.results[k].name).checked){
-							console.log($scope.tagLists[i].name);
-							console.log($scope.results);
-							
-						}
-					}
-				}
-			}	
-			
-			/*
-			var k;
-			for(k = 0; k < $scope.results.length; k++){
-				if(document.getElementById($scope.results[k].name).checked){
-					console.log($scope.results[k].name);
+					tagArr.push($scope.tagLists[i].name);
 				}
 			}
-			*/
+			console.log(tagArr);
+			if(tagArr.length > 0){
+				for(k = 0; k < $scope.results.length; k++){
+					var lol = document.getElementById($scope.results[k].location);
+					if(lol == null){
+						console.log("lol is null");
+						console.log($scope.results[k].location);
+						console.log(document);
+					} else {
+						console.log(lol);
+					if(lol.checked){
+						picArr.push($scope.results[k]._id);
+						var update = {};
+						update.id = $scope.results[k]._id;
+						update.tags = tagArr;
+						
+						console.log("controller: ");
+						console.log(update);
+						console.log(" end controller");
+						
+						$http.put('/app/photos/tags/', update).success(function(data,status,headers,config){})
+						
+					}
+					}
+				}
+				console.log(picArr);
+			} else {
+				console.log("No tags selected");
+			}
 		};
 	}
 ]);
