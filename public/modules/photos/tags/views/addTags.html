@@ -29,9 +29,14 @@
 					<span>{{tagResult.name}}</span>
 					</div>
 					<br></br>
-					<input type="text" name="newTag" ng-model="tag.name" placeholder="New tag name" ></p>
+					
+					<input type="text" name="newTag" ng-model="tag.name" placeholder="New tag name" >
 					<span><input type = "button" ng-click= 'writeTag()'onclick ="history.go(0)" value = "Create tag"</span>
-					<span><input type = "button" ng-click= 'updateTag()' href="#/addtags" value = "Add selected tags to photos"</span>
+					</p>
+					
+					<!--<input type="text" name="newTag" ng-model="tag.name" placeholder="New tag name" ></p>
+					<span><input type = "button" ng-click= 'writeTag()'onclick ="history.go(0)" value = "Create tag"</span>-->
+					<span><input type = "button" ng-click= 'updateTag()' href="#/folders" value = "Add tags to photos"</span>
 					<!--<span><input type = "button" ng-click= 'updateTag()' value = "Add tags to photos"</span>-->
 					</div>
 				</form>
