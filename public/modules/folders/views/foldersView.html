@@ -1,0 +1,24 @@
+<div class="panel panel-default"  ng-controller='foldersCtrl' ng-init='getFolders()'>
+	<!-- Default panel contents -->
+	<div class="panel-heading"> 
+		<td align="left"><h2>Welcome, Jason!</h2></td>
+		<br></br>
+		<table>
+			<tr>
+				<td>
+					<div class="col-lg-3 col-md-4 col-xs-6 thumb" ng-repeat='result in results'>
+						<a class="thumbnail" href="/#/photos/{{result.name}}">
+							<!--<img ng-src="{{result.url}}" class="img-responsive" alt="">-->
+							<img ng-src="http://oi57.tinypic.com/2mrrx94.jpg" class="img-responsive" alt="">
+						</a>
+						<p style="text-align:center;">{{result.name}}: <span class="badge">{{result.numPhotos}}</span></p>
+					</div>
+				</td>
+			</tr>
+			
+		</table>
+		
+	</div>
+			
+	<!--<img class="img-responsive" src="{{result.location}}" alt="" style="width:400px;height:300px" ng-repeat='result in results'></img>-->
+</div>

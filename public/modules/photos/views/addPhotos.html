@@ -1,0 +1,35 @@
+<div class="panel panel-default" ng-controller='addphotosCtrl' ng-init='initNewPhoto(); getPhotos()'>
+	<!-- Default panel contents -->
+	<div class="panel-heading"> 
+		<table style="width:100%">
+				<tr>
+
+					<td align="left">
+							<h3> From web: </h3>
+							<!--form-->
+								<input id="location" ng-model="photo.location" ng-bind="photo.tags" type="text" placeholder="http://">
+								<a href="#/addphotos" class="btn btn-info" ng-click='writePhoto()' onclick ="history.go(0)" role="button">Upload</a>
+								
+							
+					</td>
+					
+				</tr>
+				<td>
+				<div class="col-lg-3 col-md-4 col-xs-6 thumb" ng-repeat='result in results'>
+						<a class="thumbnail" href="#">
+							<img ng-src="{{result.location}}" class="img-responsive" alt="">
+						</a>
+				</div>
+				</td>
+				
+			</table>
+			<td align="right">
+				<form>
+					<a href="#/addtags" class="btn btn-info" role="button">Add Tags</a>
+				</form>
+			</td>
+		
+	</div>
+
+	<!--<img class="img-responsive" src="{{result.location}}" alt="" style="width:400px;height:300px" ng-repeat='result in results'></img>-->
+</div>

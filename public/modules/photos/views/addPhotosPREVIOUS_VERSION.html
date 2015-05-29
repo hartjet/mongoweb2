@@ -1,0 +1,61 @@
+<div class="panel panel-default" ng-controller='addphotosCtrl' ng-init='initNewPhoto()'>
+	<!-- Default panel contents -->
+	<div class="panel-heading"> 
+		<br></br>
+		<table style="width:100%">
+				<tr>
+
+					<td align="left">
+							<h3> From web: </h3>
+							
+							<form>
+								<input type="text" placeholder="http://" tags="tags">
+								<a href="#" class="btn btn-info" role="button">Upload</a>
+								
+							</form>
+							<td align = "left">
+							<h3> From computer: </h3>
+							<form>
+								<a href="#" class="btn btn-info" role="button">Browse</a>
+							</form>
+							</td>
+					</td>
+					
+				</tr>
+			</table>
+		<table>
+			<tr>
+				<td>
+					<div class="col-lg-3 col-md-4 col-xs-6 thumb" ng-repeat='result in results'>
+						<a class="thumbnail" href="#">
+							<img ng-src="{{result.url}}" class="img-responsive" alt="">
+						</a>
+					</div>
+				</td>
+			</tr>
+		</table>
+		
+		<table style="width:100%">
+				<tr>
+
+					<td align="right">
+						<table style="width:30%">
+							<tr>
+								
+								<td align="right">
+									<div class="btn-group">
+										<a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+											<a class="btn btn-lg btn-primary" href="#/addtags" role="button">Add tags</a>
+										</a>
+										
+									</div>
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+			</table>
+	</div>
+
+	<!--<img class="img-responsive" src="{{result.location}}" alt="" style="width:400px;height:300px" ng-repeat='result in results'></img>-->
+</div>
