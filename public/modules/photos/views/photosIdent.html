@@ -1,0 +1,41 @@
+<div class="panel panel-default" ng-controller='photosidCtrl' ng-init='getPhotos(); '>
+	<!-- Default panel contents -->
+	<div class="panel-heading"> 
+		<!--If refreshed, {{listName}} does not work-->
+		<table>
+			<tr>
+				<td>
+				<div  ng-repeat='result in results'>
+						<a class="thumbnail">
+							<img ng-src="{{result.location}}" class="img-responsive" alt="">
+						</a>
+					</div>
+				</td>
+				<td>
+				
+				
+				</td>
+			</tr>
+			
+			<tr>
+				<td>
+				<p>Tags:</p>
+					<div ng-repeat= 'photo in Tagarr'>
+						<input type="checkbox" id = "{{photo}}" name="{{photo}}">
+					<span>{{photo}}</span>
+					</div>
+				</td>
+			</tr>
+			
+			<tr>
+				<td>
+				<br></br>
+				<a class="btn btn-lg btn-primary" ng-click='deleteTag()'href="/#/folders" role="button">Delete Tags</a>
+				<a class="btn btn-lg btn-primary" ng-click='deletePhoto()' href="/#/folders" role="button">Delete photo</a>
+				</td>
+			</tr>
+		</table>
+	</div>
+
+	<!--<img class="img-responsive" src="{{result.location}}" alt="" style="width:400px;height:300px" ng-repeat='result in results'></img>-->
+</div>

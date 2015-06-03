@@ -2,7 +2,7 @@
 	<!-- Default panel contents -->
 	<div class="panel-heading"> 
 		
-<td align="left"><h2><a href="/#/folders">Jason's Photos</a> -> New Photos</h2></td>
+<td align="left"><h2><a href="/#/folders">{{user}}'s Photos</a> -> Untagged Photos</h2></td>
 
 			<table style="width:100%">
 				<td style="width:70%">
@@ -24,25 +24,22 @@
 				<hr>
 				<form action="">
 					<div>
-					<!--<h3 class="panel-heading">Tags</h3>-->
+					<h3 class="panel-heading">Active Lists</h3>
 					<div ng-repeat = 'tagResult in tagLists'>
 					<input type="checkbox" name="{{tagResult.name}}" value="{{tagResult.name}}" id="{{tagResult.name}}">
 					<span>{{tagResult.name}}</span>
 					</div>
 					<br></br>
-					<input type="text" name="newTag" ng-model="tag.name" placeholder="New tag name" >
-					<span><input type = "button" ng-click='writeTag()'onclick ="history.go(0)" value = "+"</span>
-					</p>
-					
+					<input type="text" name="newTag" ng-model="tag.name" placeholder="New tag name" ></p>
+					<span><input type = "button" ng-click= 'writeTag()' value = "Add a new tag"</span>
 					<!--<span><input type = "button" ng-click= 'updateTag()' value = "Add tags to photos"</span>-->
 					</div>
 				</form>
-				<!--<span><input type = "button" ng-click='updateTag()' href="#/folders" role="button" value="Add tags to photos"</span>-->
 				
-				<!--br></br-->
-				<a class="btn btn-lg btn-primary" ng-click='updateTag()' href="#/folders" role="button">Add tags to photos</a>
 				<br></br>
 				<br></br>
+				<br></br>
+				<a class="btn btn-lg btn-primary" ng-click='updateTag()' href="#/folders" role="button">Done</a>
 				
 			</td>
 		</table>

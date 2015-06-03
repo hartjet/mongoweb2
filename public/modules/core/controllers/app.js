@@ -22,24 +22,34 @@
     'ngTouch'
   ])
   
-.controller('mainctrl',function($scope, $http){
-	$scope.isLoggedIn = false;
-	console.log("starting:")
-	console.log($scope.isLoggedIn);
-	 $scope.loginText = 'Log in';
-	 $scope.onLoginClick = function ()
-	 {
-		if ($scope.isLoggedIn) {
-			$scope.isLoggedIn = false;
-			console.log("if");
-			console.log($scope.isLoggedIn)
-			$scope.loginText = "Log in";
+.controller('mainctrl',function($scope, $rootScope, $http){
+	$http.get('/app/core/user/').success(function(data, status, headers, config) {
+		$rootScope.user = data;	
+		console.log("We got "+data);
+		//console.log($rootScope.user);
+		if ($rootScope.user != ""){
+			console.log($rootScope.user);
+			$rootScope.loginText = 'Log Out';
+		} else {
+			console.log($rootScope.user);
+			$rootScope.loginText = 'Log In';
+		}		
+	});
+	$scope.onLoginClick = function ()
+	{
+		if ($rootScope.user && $rootScope.user != ""){
+			$http.get('/app/core/logout/').success(function(data, status, headers, config){
+				$rootScope.loginText = 'Log In';
+				$rootScope.user = "";
+			});
 		}
-		else if (!$scope.isLoggedIn){
-			$scope.isLoggedIn = true;
-			$scope.loginText = 'Log out';
-			console.log('else');
-			console.log($scope.isLoggedIn);
+	}
+	$scope.toLogin = function ()
+	{
+		if ($rootScope.user && $rootScope.user != ""){
+			window.location.href="/#/folders";
+		} else {
+			window.location.href="/#/login";
 		}
 	}
   }
@@ -56,6 +66,10 @@
       .when('/photos/:tagName', {
         templateUrl: 'modules/photos/views/photosView.html',
         controller: 'photosCtrl'
+      })
+	  .when('/photos/:tagName/:photoId', {
+        templateUrl: 'modules/photos/views/photosIdent.html',
+		controller: 'photosidCtrl'
       })
 	  .when('/folders', {
 		templateUrl: 'modules/folders/views/foldersView.html',

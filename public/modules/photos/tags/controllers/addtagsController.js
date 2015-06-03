@@ -53,13 +53,16 @@
 			console.log($scope.tag);
 			$http.post('/app/tags', $scope.tag).success(function(data,status,headers,config){
 				$scope.tag.id = data;
-			})
+				$scope.tagLists.push($scope.tag);
+				$scope.createTag();
+			});
 		};
 		$scope.createTag = function()
 		{
 			console.log('createtag');
 			var newtag = {};
 			newtag.name = "";
+			newtag.user = [$rootScope.user];
 			newtag.id = 100;
 			$scope.tag = newtag;
 		};
@@ -91,19 +94,30 @@
 						var update = {};
 						update.id = $scope.results[k]._id;
 						update.tags = tagArr;
-						
+						update.tagName = "untagged";
+						update.photoId = $scope.results[k].id;
 						console.log("controller: ");
 						console.log(update);
 						console.log(" end controller");
 						
 						$http.put('/app/photos/tags/', update).success(function(data,status,headers,config){})
 						
+						$http.put('/app/deletedefaultTag/', update).success(function(data,status,headers,config){})
 					}
 					}
 				}
 				console.log(picArr);
 			} else {
+				
+				/*var j;
+				for(j = 0; j < $scope.results.length; j++){
+					var update = {};
+					update.id = $scope.results[j]._id;
+				
 				console.log("No tags selected");
+				$http.put('/app/photos/defaultTag/', update).success(function(data,status,headers,config){})
+				}
+				*/
 			}
 		};
 	}

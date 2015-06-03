@@ -8,17 +8,19 @@
 							<h3> From web: </h3>
 							<!--form-->
 								<input id="location" ng-model="photo.location" ng-bind="photo.tags" type="text" placeholder="http://">
-								<a href="#/addphotos" class="btn btn-info" ng-click='writePhoto()' onclick ="history.go(0)" role="button">Upload</a>
+								<a href="#/addphotos" class="btn btn-info" onclick ="history.go(0)" ng-click='writePhoto()' role="button">Upload</a>
 								
 							
 					</td>
 					
 				</tr>
 				<td>
-				<div class="col-lg-3 col-md-4 col-xs-6 thumb" ng-repeat='result in results'>
+				<div ng-repeat = 'result in results'>
+				<div class="col-lg-3 col-md-4 col-xs-6 thumb" >
 						<a class="thumbnail" href="#">
 							<img ng-src="{{result.location}}" class="img-responsive" alt="">
 						</a>
+				</div>
 				</div>
 				</td>
 				

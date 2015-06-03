@@ -14,6 +14,7 @@ var methodOverride = require('method-override');
 var session = require('express-session');
 var MongoStore = require('connect-mongo')(session);
 var crypto = require('crypto');
+var url = require('url');
 
 //put config url behind file to hide passwords and username
 var mongoDBConnection = require('./db.photoApp.config');
@@ -46,6 +47,10 @@ var urlencodedParser = bodyParser.urlencoded({ extended: false });
 
 var photos;
 var tags;
+var users;
+
+var photoidGenerator = 100;
+var tagidGenerator = 100;
 
 var options = { server: { socketOptions: { keepAlive: 1, connectTimeoutMS: 30000 } } }; 
 mongoose.connect(mongooseUri, options);
@@ -67,8 +72,12 @@ mongoose.connection.on('open', function() {
 	var Schema = mongoose.Schema;
 	var PhotosSchema = new Schema(
 		{
+			id: Number,
 			name: String,
 			description: String,
+			user: [{
+				type: String
+			}],
 			location: String,
 			tags: [{
 				type: String
@@ -80,11 +89,30 @@ mongoose.connection.on('open', function() {
 	var TagsSchema = new Schema(
 		{
 			name: String,
+			user: [{
+				type: String
+			}],
 			id: Number
 		},
 		{collection: 'tags'}
 	);
 	Tags = mongoose.model('Tags', TagsSchema);
+	var userSchema = new Schema(
+		{
+			username: String,
+			password: String
+		},
+		{collection: 'users'}
+	);
+	users = mongoose.model('users', userSchema);
+	var CounterSchema = new Schema(
+		{
+			_id: String,
+			sequence_value: Number
+		},
+		{collection: 'counters'}
+	);
+	counters = mongoose.model('counters', CounterSchema);
 	console.log('models have been created');
 });
 
@@ -101,21 +129,61 @@ function displayDBError(err){
 }
 
 console.log("before creating query functions");
-function retrieveAllPhotos(res){
-	var query = photos.find({});
+function retrieveAllPhotos(res, query){
+	var query = photos.find(query);
 	query.exec(function(err, itemArr){
 		res.json(itemArr);
 	});
 }
 
-function retrieveAllTags(res){
-	var query = Tags.find({});
+function retrieveAllTags(res, query){
+	var query = Tags.find(query);
 	query.exec(function(err, itemArr){
 		res.json(itemArr);
 	});
+}
+
+function getNextSequenceValue(photo){
+	counters.findOneAndUpdate({
+			"_id" : "productid"},
+                {
+                "$inc":{"sequence_value":1}
+        }, {
+                "new" : true,
+                "upsert" : false
+        }, function(err, counters) {
+                if (err) {
+                        console.log(err);
+                } else {
+                       
+                }
+				console.log("Sent "+counters.sequence_value);
+				photo.id = counters.sequence_value;
+				photos.create([photo], function(err){
+					if(err){
+						console.log('object creation failed');
+					}
+				});
+        });
+	/*console.log(sequenceName);
+    var sequenceDocument = counters.findAndModify({query:{_id: "productid" },update: {$inc:{sequence_value:1}},new:true},
+			function(){
+				
+	
+	});*/
+	//var idd = sequenceDocument.sequence_value;
+	//console.log(idd);
 }
 
 function retrievePhotosByTag(res, query){
+	console.log(query);
+	var query = photos.find(query);
+	query.exec(function(err, itemArr){
+		res.json(itemArr);
+	});
+}
+
+function retrievePhotosById(res, query){
 	console.log(query);
 	var query = photos.find(query);
 	query.exec(function(err, itemArr){
@@ -131,32 +199,69 @@ function updatePhotoTag(res, query){
 	});
 }
 
+function logInUsingDB(req, res, query){
+	console.log("logging in....")
+	var query = users.find(query);
+	query.exec(function(err, itemArr){
+		if (err) {
+			console.log('failed to log in');
+			console.log(err);
+		} else {
+			//console.log(itemArr);
+			if(itemArr.length > 0){
+				curSession = req.session
+				curSession.username=itemArr[0].username;
+				curSession.password=itemArr[0].password;
+				//console.log(curSession);
+				res.json(curSession.username);
+			} else {
+				console.log('Wrong U/P');
+				res.json("");
+			}
+		}
+	});
+}
+
 
 console.log("before defining app static route");
-app.use('/', express.static('./public'));
+app.use('/', express.static('./public/'));
 app.use('/app/json/', express.static('./app/json'));
+app.use(session({secret: 'lolcat',saveUninitialized: true,resave: true}));
+
+var curSession;
 
 app.get('/app/photos/', function(req, res){
 	console.log('Query all photos');
-	retrieveAllPhotos(res);
+	curSession=req.session;
+	retrieveAllPhotos(res, {user: curSession.username});
 });
 
 app.get('/app/photos/tags/:tag', function(req, res){
 	var tag = req.params.tag;
 	console.log('Query photos by tag');
 	console.log(tag);
-	retrievePhotosByTag(res, {tags: tag});
+	curSession=req.session;
+	retrievePhotosByTag(res, {tags: tag, user: curSession.username});
+});
+
+app.get('/app/photos/:tag/:photoId', function(req, res){
+	var photoId = req.params.photoId;
+	console.log('Quey photos by id');
+	console.log(photoId);
+	retrievePhotosById(res, {id: photoId});
 });
 
 app.get('/app/tags/', function(req, res){
 	console.log('Query all tags');
-	retrieveAllTags(res);
+	curSession=req.session;
+	//console.log(curSession);
+	retrieveAllTags(res, {user: curSession.username});
 });
 
 app.post('/app/tags/', jsonParser, function(req, res) {
 	console.log(req.body);
 	var jsonObj = req.body;
-	//jsonObj.id = tagidGenerator;
+	jsonObj.id = tagidGenerator;
 	Tags.create([jsonObj], function (err) {
 		if (err) {
 			console.log('object creation failed');
@@ -169,6 +274,12 @@ app.post('/app/tags/', jsonParser, function(req, res) {
 app.post('/app/addphotos/', jsonParser, function(req, res){
 	console.log(req.body);
 	var jsonObj = req.body;
+	getNextSequenceValue(jsonObj);
+});
+
+app.post('/app/photos/', jsonParser, function(req, res){
+	console.log(req.body);
+	var jsonObj = req.body;
 	photos.create([jsonObj], function(err){
 		if(err){
 			console.log('object creation failed');
@@ -177,7 +288,7 @@ app.post('/app/addphotos/', jsonParser, function(req, res){
 });
 
 app.put('/app/photos/tags/', jsonParser, function(req, res) {
-	console.log(req.body);
+	console.log("req.body"+req.body);
 	
 	photos.update({"_id": mongoose.Types.ObjectId(req.body.id)},{$addToSet:{tags: {$each: req.body.tags}}}, function(err){
 		if(err){
@@ -191,6 +302,91 @@ app.put('/app/photos/tags/', jsonParser, function(req, res) {
 	//console.log('Query photos by tag');
 	//console.log(tag);
 	//retrievePhotosByTag(res, {tags: tag});
+});
+
+/*app.put('/app/photos/defaultTag/', jsonParser, function(req, res) {
+	console.log("req.body"+ req.body);
+	console.log("req.body.id" + req.body.id);
+	
+	photos.update({"_id": mongoose.Types.ObjectId(req.body.id)},{$addToSet:{tags: "untagged"}}, function(err){
+		if(err){
+			console.log('object update failed');
+			console.log(err);
+		}
+	});
+	
+	//db.photos.update({"_id": ObjectId("555e5722e62133366a9f8e31")},{$addToSet:{tags: {$each: ["washington", "france"]}}})
+	//var tag = req.params.tag;
+	//console.log('Query photos by tag');
+	//console.log(tag);
+	//retrievePhotosByTag(res, {tags: tag});
+});
+*/
+app.post('/app/core/login/', jsonParser, function(req, res){
+	console.log("logging in");
+	var uname = req.body.username;
+	var pword = req.body.password;
+	logInUsingDB(req, res, {username: uname, password: pword});
+});
+
+app.get('/app/core/logout/', function(req,res){
+	req.session.destroy(function(err){
+		console.log("logging out");
+		if(err){
+			console.log(err);
+		}
+	});
+});
+
+app.get('/app/core/user/', function(req,res){
+	curSession=req.session;
+	console.log("sending "+curSession.username);
+	res.send(curSession.username);
+});
+
+app.put('/app/deletephoto/', jsonParser, function(req, res){
+	console.log('id: '+ req.body[0].id);
+	photos.remove({id: req.body[0].id},function(err){
+		if(err){
+			console.log('object remove failed');
+			console.log(err);
+		}
+	});
+	console.log('I am a seperate line-------------');
+	console.log(req.body);
+
+});
+
+app.put('/app/deletetag/', jsonParser, function(req, res){
+	console.log('req: '+ req.body.id);
+	console.log('req2: '+ req.body.tagName);
+	photos.update({"id": req.body.id},{$pull:{"tags":req.body.tagName}},function(err){
+		if(err){
+			console.log('object update failed');
+			console.log(err);
+		}
+	});
+	console.log('tagggggg' + req.body.Tagarr);
+	if(req.body.Tagarr.length == 1 || req.body.Tagarr.length == 0)
+	{
+		photos.update({"id": req.body.id},{$addToSet:{"tags":"untagged"}},function(err){
+			if(err){
+				console.log('object update failed');
+				console.log(err);
+			}
+		});
+	}
+});
+
+app.put('/app/deletedefaultTag/', jsonParser, function(req, res){
+	console.log('reqqqqqq: '+ req.body.photoId);
+	console.log('reqqqqqqq2: '+ req.body.tagName);
+	photos.update({"id": req.body.photoId},{$pull:{"tags":req.body.tagName}},function(err){
+		if(err){
+			console.log('object update failed');
+			console.log(err);
+		}
+	});
 });
 
 

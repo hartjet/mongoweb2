@@ -1,0 +1,9 @@
+These are the users for our site. This is for human reference
+only, and is not referenced by the site at all.
+
+Username	Password
+
+Jason		JSON
+Melvin		wboo
+Sean		Bean
+

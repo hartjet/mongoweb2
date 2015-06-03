@@ -6,6 +6,9 @@
 		<!-- Optional theme -->
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css">
 	</head>
+	
+	<div class="panel panel-default" ng-controller='loginCtrl' ng-init='initUser()'>
+
 	<body >
 		  
 		  <!-- Main component for a primary marketing message or call to action -->
@@ -17,10 +20,10 @@
 			
 			<form>
 				Username<br>
-				<input type="text" name="username">
+				<input type="text" name="username" input id="username" ng-model="user.username">
 				<br>
 				Password<br>
-				<input type="password">
+				<input type="password" name="password" input id="password" ng-model="user.password" onkeydown="if (event.keyCode == 13) document.getElementById('loginbutton').click()">
 			</form>
 			
 			
@@ -28,9 +31,9 @@
   
  
 			<p>
-			  <a class="btn btn-lg btn-primary" href="/#/folders" role="button" ng-click = "onLoginClick()">Log In</a>
-			  <a class="btn btn-lg btn-primary" href="#/" role="button">Sign Up</a>
-			  <a class="btn btn-lg btn-primary" href="#/" role="button">Help</a>
+			  <a class="btn btn-lg btn-primary" href="/#/login" role="button" id="loginbutton" ng-click="login()">Log In</a>
+			  <a class="btn btn-lg btn-primary" href="#/login" role="button">Sign Up</a>
+			  <a class="btn btn-lg btn-primary" href="#/login" role="button">Help</a>
 			</p>
 		  </div>
 		  
@@ -42,4 +45,5 @@
 	
 
 	</body>
+	</div>
 </html>
