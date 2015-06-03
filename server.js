@@ -137,8 +137,8 @@ function retrieveAllPhotos(res, query){
 }
 
 function retrieveAllTags(res, query){
-	var query = Tags.find(query);
-	query.exec(function(err, itemArr){
+	var query1 = Tags.find(query);
+	query1.exec(function(err, itemArr){
 		res.json(itemArr);
 	});
 }
@@ -185,8 +185,8 @@ function getNextSequenceValue(photo){
 
 function retrievePhotosByTag(res, query){
 	console.log(query);
-	var query1 = photos.find(query);
-	query1.exec(function(err, itemArr){
+	var query = photos.find(query);
+	query.exec(function(err, itemArr){
 		res.json(itemArr);
 	});
 }
