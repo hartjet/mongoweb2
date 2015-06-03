@@ -135,21 +135,22 @@ function retrieveAllPhotos(res, query){
 		res.json(itemArr);
 	});
 }
-/* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
 function retrieveAllTags(res, query){
 	var query = Tags.find(query);
 	query.exec(function(err, itemArr){
 		res.json(itemArr);
 	});
 }
-*/
+
+/*
 function retrieveAllTags(res){
 	var query = Tags.find({});
 	query.exec(function(err, itemArr){
 		res.json(itemArr);
 	});
 }
-
+*/
 function getNextSequenceValue(photo){
 	counters.findOneAndUpdate({
 			"_id" : "productid"},
@@ -184,8 +185,8 @@ function getNextSequenceValue(photo){
 
 function retrievePhotosByTag(res, query){
 	console.log(query);
-	var query = photos.find(query);
-	query.exec(function(err, itemArr){
+	var query1 = photos.find(query);
+	query1.exec(function(err, itemArr){
 		res.json(itemArr);
 	});
 }
@@ -257,19 +258,20 @@ app.get('/app/photos/:tag/:photoId', function(req, res){
 	console.log(photoId);
 	retrievePhotosById(res, {id: photoId});
 });
-/*+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
 app.get('/app/tags/', function(req, res){
 	console.log('Query all tags');
 	curSession=req.session;
 	//console.log(curSession);
 	retrieveAllTags(res, {user: curSession.username});
 });
-*/
+
+/*
 app.get('/app/tags/', function(req, res){
 	console.log('Query all tags');
 	retrieveAllTags(res);
 });
-
+*/
 app.post('/app/tags/', jsonParser, function(req, res) {
 	console.log(req.body);
 	var jsonObj = req.body;
