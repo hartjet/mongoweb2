@@ -17,15 +17,13 @@
 			var url = '/app/tags';
 			$http.get(url).success(function(data, status, headers, config) {
 			   $scope.results = data;
-			   console.log($scope.results);
 			   //console.log($scope.results);
-			   /*var listNames = [];
+			   var listNames = [];
 			   for (var i = 0; i < data.length; i++) {
 				   listNames[i] = { "name": data[i].name, "id": data[i].id };
 			   }
-			   $rootScope.listNames = listNames;*/
+			   $rootScope.listNames = listNames;
 			});
 		};
-		
 	}
 ]);

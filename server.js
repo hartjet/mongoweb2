@@ -207,14 +207,6 @@ function updatePhotoTag(res, query){
 	});
 }
 
-function retrievePhotoCount(res, query){
-	var query = photos.find(query).select('photos').count();
-	query.exec(function (err, numPhotos){
-		console.log('num photos' + numPhotos);
-		res.json(numPhotos);
-	});
-}
-
 function logInUsingDB(req, res, query){
 	console.log("logging in....")
 	var query = users.find(query);
@@ -276,19 +268,12 @@ app.get('/app/tags/', function(req, res){
 	retrieveAllTags(res, {user: curSession.username});
 });
 
-app.get('app/tags/:tagname/count', function(req, res){
-	console.log('get # photos in folder');
-	var id = req.params.tagname;
-	retrievePhotoCount(res, (tags:[id]));
-});
-
 /*
 app.get('/app/tags/', function(req, res){
 	console.log('Query all tags');
 	retrieveAllTags(res);
 });
 */
-
 app.post('/app/tags/', jsonParser, function(req, res) {
 	console.log(req.body);
 	var jsonObj = req.body;
