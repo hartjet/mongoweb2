@@ -262,11 +262,11 @@ app.get('/app/photos/:tag/:photoId', function(req, res){
 app.get('/app/tags/', function(req, res){
 	console.log('Query all tags');
 	curSession=req.session;
-	console.log(curSession);
+	//console.log(curSession);
 	
-	curSession.username='Sean';
-	curSession.password='Bean';
-	console.log(curSession);
+	//curSession.username='Sean';
+	//curSession.password='Bean';
+	//console.log(curSession);
 	
 	retrieveAllTags(res, {user: curSession.username});
 });
