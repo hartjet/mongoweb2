@@ -264,8 +264,8 @@ app.get('/app/tags/', function(req, res){
 	curSession=req.session;
 	console.log(curSession);
 	
-	curSession.username='Jason';
-	curSession.password='JSON';
+	curSession.username='Sean';
+	curSession.password='Bean';
 	console.log(curSession);
 	
 	retrieveAllTags(res, {user: curSession.username});
