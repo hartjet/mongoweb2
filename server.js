@@ -230,6 +230,14 @@ function logInUsingDB(req, res, query){
 	});
 }
 
+function retrievePhotosCount(res, query) {
+	var query = photos.aggregate([{ $match: query },{"$unwind" : "$tags"},{ "$group": {"_id": {"tagName": "$tags"},"count": { "$sum": 1 } }}]);
+	query.exec(function (err, numberOfPhotos) {
+		console.log(numberOfPhotos);
+		res.json(numberOfPhotos);
+	});
+}
+
 
 console.log("before defining app static route");
 app.use('/', express.static('./public/'));
@@ -266,6 +274,12 @@ app.get('/app/tags/', function(req, res){
 	curSession=req.session;
 	//console.log(curSession);
 	retrieveAllTags(res, {user: curSession.username});
+});
+
+app.get('/app/photos/count/', function(req,res){
+	console.log('Query count of each photo');
+	curSession=req.session;
+	retrievePhotosCount(res, {user: curSession.username});
 });
 
 /*
