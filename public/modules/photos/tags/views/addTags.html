@@ -30,8 +30,9 @@
 					<span>{{tagResult.name}}</span>
 					</div>
 					<br></br>
-					<input type="text" name="newTag" ng-model="tag.name" placeholder="New tag name" ></p>
-					<span><input type = "button" ng-click= 'writeTag()' value = "Add a new tag"</span>
+					<input type="text" name="newTag" ng-model="tag.name" placeholder="New tag name" >
+					<span><input type = "button" ng-click= 'writeTag()' value = "+"</span>
+					</p>
 					<!--<span><input type = "button" ng-click= 'updateTag()' value = "Add tags to photos"</span>-->
 					</div>
 				</form>
@@ -39,7 +40,7 @@
 				<br></br>
 				<br></br>
 				<br></br>
-				<a class="btn btn-lg btn-primary" ng-click='updateTag()' href="#/folders" role="button">Done</a>
+				<a class="btn btn-lg btn-primary" ng-click='updateTag()' href="#/folders" role="button">Add tags to selected photos</a>
 				
 			</td>
 		</table>

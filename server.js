@@ -238,11 +238,13 @@ app.use(session({secret: 'lolcat',saveUninitialized: true,resave: true}));
 
 var curSession;
 
+/*
 app.get('/app/photos/', function(req, res){
 	console.log('Query all photos');
 	curSession=req.session;
 	retrieveAllPhotos(res, {user: curSession.username});
 });
+*/
 
 app.get('/app/photos/tags/:tag', function(req, res){
 	var tag = req.params.tag;
@@ -263,7 +265,6 @@ app.get('/app/tags/', function(req, res){
 	console.log('Query all tags');
 	curSession=req.session;
 	//console.log(curSession);
-
 	retrieveAllTags(res, {user: curSession.username});
 });
 
